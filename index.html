@@ -3468,13 +3468,15 @@
                 if (resOtp.success) {
                     const userOtp = prompt("Halo " + n + "! Masukkan kode OTP yang dikirim ke WA " + w + " untuk validasi order:");
                     
-                    if (!userOtp) {
+                    if (!userOtp || userOtp.trim() === "") {
                         window.showToast("Order dibatalkan. Verifikasi WA diperlukan bray!", "error");
                         btn.disabled = false;
                         btn.innerHTML = 'CREATE ORDER';
                         return;
                     }
                     otpToken = userOtp; // Masukkan ke variabel buat divalidasi backend nanti
+                } else {
+                    throw new Error(resOtp.error || "Gagal mengirim OTP");
                 }
             } catch (err) {
                 window.showToast("Gagal kirim OTP: " + err.message, "error");
@@ -3588,7 +3590,6 @@
             btn.innerHTML = 'CREATE ORDER';
         }
     };
-
     window.renderOrdersTable = () => {
         const tb = document.getElementById('ordersTableBody');
         if (!tb) return;
