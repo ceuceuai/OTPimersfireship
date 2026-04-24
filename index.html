@@ -3439,20 +3439,57 @@
         const btn = document.getElementById('btnSubmitCheckout');
         if (!btn) return;
 
+        // 1. AMBIL DATA DARI FORM (KOMPLIT GAYA ASLI LO)
+        const pd = window.appState.currentCheckoutProduct;
+        const n = document.getElementById('coName').value.trim();
+        const e = document.getElementById('coEmail').value.trim();
+        const rawWa = document.getElementById('coWA').value;
+        const w = window.formatPhoneNumber(rawWa);
+        const p = document.getElementById('coPassword').value;
+        const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+        const selectedMethod = selectedRadio ? selectedRadio.value : 'Bank Transfer';
+
+        // PROTEKSI WAJIB ISI
+        if (!n || !e || !w) {
+            window.showToast("Nama, Email, dan WA wajib diisi!", "error");
+            return;
+        }
+
+        // --- SUNTIKAN LOGIC OTP UNTUK CEGAH EMAIL/WA PALSU (HANYA JIKA BELUM LOGIN) ---
+        let otpToken = "";
+        if (!window.appState.user) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Verifikasi Nomor...';
+            
+            try {
+                // Backend nembak OTP ke WA/Email kustomer
+                const resOtp = await apiCall('sendOtpOnly', { email: e, wa: w, name: n });
+                
+                if (resOtp.success) {
+                    const userOtp = prompt("Halo " + n + "! Masukkan kode OTP yang dikirim ke WA " + w + " untuk validasi order:");
+                    
+                    if (!userOtp) {
+                        window.showToast("Order dibatalkan. Verifikasi WA diperlukan bray!", "error");
+                        btn.disabled = false;
+                        btn.innerHTML = 'CREATE ORDER';
+                        return;
+                    }
+                    otpToken = userOtp; // Masukkan ke variabel buat divalidasi backend nanti
+                }
+            } catch (err) {
+                window.showToast("Gagal kirim OTP: " + err.message, "error");
+                btn.disabled = false;
+                btn.innerHTML = 'CREATE ORDER';
+                return;
+            }
+        }
+        // --- END SUNTIKAN OTP ---
+
         btn.disabled = true;
         btn.innerHTML = '<i class="ph ph-circle-notch animate-spin"></i> Processing...';
 
         try {
-            // AMBIL DATA DARI FORM (LOGIKA ASLI LO)
-            const pd = window.appState.currentCheckoutProduct;
-            const n = document.getElementById('coName').value.trim();
-            const e = document.getElementById('coEmail').value.trim();
-            const w = window.formatPhoneNumber(document.getElementById('coWA').value);
-            const p = document.getElementById('coPassword').value;
-            const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
-            const selectedMethod = selectedRadio ? selectedRadio.value : 'Bank Transfer';
-            
-            // Hitung ulang untuk pengiriman data ke Google Sheets
+            // LOGIKA HITUNG HARGA & KODE UNIK (TETEP SAMA PERSIS KAYA KODE LO)
             const c = window.appState.currentCheckoutCoupon;
             const d = c ? (c.type === 'percent' ? pd.price * (c.value / 100) : c.value) : 0;
             const unique = window.appState.currentCheckoutUniqueCode || 0;
@@ -3467,10 +3504,7 @@
 
             const finalStatus = t <= 0 ? 'Paid' : 'Pending';
 
-            // PROTEKSI WAJIB ISI
-            if (!n || !e || !w) throw new Error("Nama, Email, dan WA wajib diisi!");
-
-            // 1. KIRIM DATA KE GOOGLE SHEETS
+            // 1. KIRIM DATA KE GOOGLE SHEETS (DENGAN TAMBAHAN FIELD OTP)
             await apiCall('saveOrder', {
                 customerName: n,
                 customerEmail: e,
@@ -3484,14 +3518,14 @@
                 paymentMethod: selectedMethod,
                 status: finalStatus,
                 userPasswordHash: window.appState.user ? window.appState.user.password : await window.hashPassword(p),
-                affiliateRef: localStorage.getItem('affiliateRef') || null
+                affiliateRef: localStorage.getItem('affiliateRef') || null,
+                otp: otpToken // Kirim OTP ke backend buat divalidasi sebelum write ke sheet
             });
 
-            // 2. TAMPILAN INSTRUKSI PEMBAYARAN
+            // 2. TAMPILAN INSTRUKSI PEMBAYARAN (GAYA ASLI LO - NO MODIF)
             const successView = document.getElementById('view-checkout');
             
             if (t <= 0) {
-                // Tampilan Gratis (Langsung Login)
                 successView.innerHTML = `
                     <div class="max-w-md mx-auto py-20 px-6 text-center animate-in fade-in duration-500">
                         <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/20">
@@ -3502,7 +3536,6 @@
                         <button onclick="window.location.href='/'" class="w-full py-4 bg-brand text-white rounded-2xl font-black shadow-xl shadow-brand/30">Login Sekarang</button>
                     </div>`;
             } else {
-                // TAMPILAN BERBAYAR (INSTRUKSI TRANSFER)
                 const banks = window.appState.settings.banks || [];
                 let bankListHtml = banks.map(b => `
                     <div class="bg-white/60 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 mb-3 text-left">
@@ -3523,7 +3556,6 @@
                     <div class="max-w-md mx-auto py-10 px-4 text-center animate-in zoom-in duration-300">
                         <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-2">Order Diterima!</h2>
                         <p class="text-sm text-slate-500 mb-8 font-medium">Lakukan transfer agar akses produk terbuka.</p>
-
                         <div class="glass p-6 rounded-[2.5rem] border border-white/50 dark:border-slate-800 shadow-2xl relative overflow-hidden text-left mb-8">
                             <div class="absolute -right-10 -top-10 w-32 h-32 bg-brand/10 rounded-full blur-3xl"></div>
                             <div class="relative z-10">
@@ -3535,10 +3567,8 @@
                                     </button>
                                 </div>
                                 <p class="text-center text-[10px] font-bold text-amber-600 uppercase mb-6">*Termasuk Kode Unik: ${unique}</p>
-
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center mb-3">Rekening Pembayaran:</p>
                                 ${bankListHtml || '<p class="text-center text-xs text-slate-400 italic">Data bank belum diatur di admin.</p>'}
-                                
                                 <div class="mt-6 p-4 bg-brand/5 dark:bg-brand/10 rounded-2xl border border-brand/10 text-center">
                                     <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
                                         <strong>PENTING:</strong> Transfer <strong>SAMA PERSIS</strong> sampai digit terakhir (<strong>${String(t).slice(-3)}</strong>) untuk verifikasi otomatis.
@@ -3546,10 +3576,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <button onclick="window.location.href='/'" class="w-full py-4 bg-brand text-white rounded-2xl font-black shadow-xl shadow-brand/30 transition-all mb-4">
-                            Ke Dashboard
-                        </button>
+                        <button onclick="window.location.href='/'" class="w-full py-4 bg-brand text-white rounded-2xl font-black shadow-xl shadow-brand/30 transition-all mb-4">Ke Dashboard</button>
                         <p class="text-xs text-slate-400 italic font-medium text-center">Instruksi ini juga sudah kami kirim ke WhatsApp Anda.</p>
                     </div>`;
             }
