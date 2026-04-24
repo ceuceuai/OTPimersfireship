@@ -3563,66 +3563,66 @@
     };
 
     window.renderOrdersTable = () => { 
-        const tb=document.getElementById('ordersTableBody'); 
-        if(!tb) return; 
-        tb.innerHTML=''; 
-        window.appState.orders.forEach(o=>{ 
-            const b=o.status==='Paid'?`<span class="text-green-500 font-bold">Paid</span>`:`<span class="text-yellow-500 font-bold">Pending</span>`; 
-            const a=o.status==='Paid'?`<button disabled class="text-slate-400">Aktif</button>`:`<button onclick="window.approveOrder('${o.id}')" class="bg-brand text-white px-2 py-1 rounded text-xs">Approve</button>`; 
-            tb.innerHTML+=`<tr class="border-b border-white/10"><td class="px-6 py-4 font-mono text-xs dark:text-white">#${String(o.id).substring(0,6)}</td><td class="px-6 py-4"><p class="font-bold dark:text-white">${o.customerName}</p><p class="text-xs">${o.paymentMethod}</p></td><td class="px-6 py-4 dark:text-white text-xs">${o.productTitle}</td><td class="px-6 py-4 dark:text-white font-bold">${window.formatRp(o.totalPay||o.basePrice)}</td><td class="px-6 py-4">${b}</td><td class="px-6 py-4 text-right">${a}</td></tr>`; 
-        }); 
-    };
-
-    window.renderOrdersTable = () => { 
         const tb = document.getElementById('ordersTableBody'); 
-        if(!tb) return; 
+        if (!tb) return; 
         tb.innerHTML = ''; 
 
-        // AMBIL INPUT FILTER & SEARCH (GAYA SERAGAM)
+        // 1. Pastikan data orders ada (kasih fallback array kosong biar gak error)
+        const allOrders = window.appState.orders || [];
+
+        // 2. Ambil input filter & search (Gaya Seragam)
         const sIn = document.getElementById('orderSearchInput');
         const sTerm = sIn ? sIn.value.toLowerCase() : '';
         const fIn = document.getElementById('orderStatusFilter');
         const fStat = fIn ? fIn.value : 'ALL';
 
-        // 1. FILTER DATA REAL-TIME
-        const filtered = window.appState.orders.filter(o => {
-            const mSearch = (o.customerName || '').toLowerCase().includes(sTerm) || String(o.id).toLowerCase().includes(sTerm);
+        // 3. Filter Data Real-Time
+        const filtered = allOrders.filter(o => {
+            const name = (o.customerName || '').toLowerCase();
+            const oid = String(o.id || '').toLowerCase();
+            const mSearch = name.includes(sTerm) || oid.includes(sTerm);
             const mStatus = (fStat === 'ALL') || (o.status === fStat);
             return mSearch && mStatus;
         });
 
-        // 2. LOGIKA PAGINATION (10 DATA PER HALAMAN)
+        // 4. Logika Pagination (Limit 10 data)
         const limit = 10;
+        const totalPages = Math.ceil(filtered.length / limit) || 1;
+        
+        // Jaga-jaga kalau halaman aktif di state kegedean setelah filter
+        if (window.appState.orderPage > totalPages) window.appState.orderPage = 1;
+
         const start = (window.appState.orderPage - 1) * limit;
         const end = start + limit;
         const paged = filtered.slice(start, end);
 
-        if(paged.length === 0) {
-            tb.innerHTML = '<tr><td colspan="6" class="px-6 py-10 text-center text-slate-500 font-bold text-xs italic">Data tidak ditemukan bray...</td></tr>';
+        if (paged.length === 0) {
+            tb.innerHTML = '<tr><td colspan="6" class="px-6 py-12 text-center text-slate-500 font-bold text-xs italic">Data tidak ditemukan bray...</td></tr>';
             return;
         }
 
-        // 3. RENDER BARIS (GAYA ASLI LO)
+        // 5. Render Baris ke Tabel (Gaya Asli Lo)
         paged.forEach(o => { 
             const b = o.status === 'Paid' ? `<span class="text-green-500 font-bold">Paid</span>` : `<span class="text-yellow-500 font-bold">Pending</span>`; 
             const a = o.status === 'Paid' ? `<button disabled class="text-slate-400">Aktif</button>` : `<button onclick="window.approveOrder('${o.id}')" class="bg-brand text-white px-2 py-1 rounded text-xs font-bold">Approve</button>`; 
             
-            tb.innerHTML += `<tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
-                <td class="px-6 py-4 font-mono text-xs dark:text-white">#${String(o.id).substring(0,6)}</td>
-                <td class="px-6 py-4">
-                    <p class="font-bold dark:text-white">${o.customerName}</p>
-                    <p class="text-xs text-slate-500">${o.paymentMethod}</p>
-                </td>
-                <td class="px-6 py-4 dark:text-white text-xs">${o.productTitle}</td>
-                <td class="px-6 py-4 dark:text-white font-bold text-brand">${window.formatRp(o.totalPay||o.basePrice)}</td>
-                <td class="px-6 py-4">${b}</td>
-                <td class="px-6 py-4 text-right">${a}</td>
-            </tr>`; 
+            tb.innerHTML += `
+                <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+                    <td class="px-6 py-4 font-mono text-xs dark:text-white opacity-60">#${String(o.id).substring(0,6)}</td>
+                    <td class="px-6 py-4">
+                        <p class="font-bold dark:text-white text-xs">${o.customerName || 'No Name'}</p>
+                        <p class="text-[10px] text-slate-500">${o.paymentMethod || '-'}</p>
+                    </td>
+                    <td class="px-6 py-4 dark:text-white text-xs italic opacity-80">${o.productTitle || '-'}</td>
+                    <td class="px-6 py-4 dark:text-white font-black text-brand text-sm">${window.formatRp ? window.formatRp(o.totalPay||o.basePrice) : (o.totalPay||o.basePrice)}</td>
+                    <td class="px-6 py-4">${b}</td>
+                    <td class="px-6 py-4 text-right">${a}</td>
+                </tr>`; 
         }); 
 
-        // Update Text Halaman di UI
+        // Update Indikator Halaman di UI
         const pDisplay = document.getElementById('currentOrderPage');
-        if(pDisplay) pDisplay.innerText = window.appState.orderPage;
+        if (pDisplay) pDisplay.innerText = window.appState.orderPage;
     };
 
     window.changeOrderPage = (dir) => {
@@ -3631,7 +3631,7 @@
         const fIn = document.getElementById('orderStatusFilter');
         const fStat = fIn ? fIn.value : 'ALL';
 
-        const filteredCount = window.appState.orders.filter(o => {
+        const filteredCount = (window.appState.orders || []).filter(o => {
             const mSearch = (o.customerName || '').toLowerCase().includes(sTerm) || String(o.id).toLowerCase().includes(sTerm);
             const mStatus = (fStat === 'ALL') || (o.status === fStat);
             return mSearch && mStatus;
@@ -3640,12 +3640,12 @@
         const maxPage = Math.ceil(filteredCount / 10) || 1;
         const newPage = window.appState.orderPage + dir;
         
-        if(newPage >= 1 && newPage <= maxPage) {
+        if (newPage >= 1 && newPage <= maxPage) {
             window.appState.orderPage = newPage;
             window.renderOrdersTable();
         }
     };
-
+    
     window.approveOrder = async (id) => { 
         if(confirm("Approve order ini?")){ 
             try{ 
