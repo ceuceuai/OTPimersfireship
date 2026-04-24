@@ -538,6 +538,19 @@
                             <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Verifikasi dan kelola pesanan masuk.</p>
                         </div>
                     </div>
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <div class="flex-1 relative">
+                        <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="orderSearchInput" oninput="window.appState.orderPage = 1; window.renderOrdersTable();" placeholder="Cari Nama atau Order ID..." class="w-full pl-11 pr-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-white/40 dark:border-slate-700/50 rounded-2xl outline-none focus:ring-2 focus:ring-brand dark:text-white text-sm transition-all">
+                    </div>
+                        <div class="flex gap-2">
+                        <select id="orderStatusFilter" onchange="window.appState.orderPage = 1; window.renderOrdersTable();" class="px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-white/40 dark:border-slate-700/50 rounded-2xl outline-none focus:ring-2 focus:ring-brand dark:text-white text-sm font-bold">
+                    <option value="ALL">Semua Status</option>
+                    <option value="Paid">PAID (Lunas)</option>
+                    <option value="Pending">PENDING (Menunggu)</option>
+                    </select>
+                  </div>
+                </div>
                     <div class="glass rounded-2xl overflow-hidden shadow-xl relative z-10">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm text-slate-600 dark:text-slate-300">
@@ -555,6 +568,19 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="flex justify-between items-center mt-6 px-2">
+                            <p class="text-xs text-slate-500 font-bold italic text-[10px]">
+                            Halaman <span id="currentOrderPage" class="text-brand text-sm">1</span>
+                            </p>
+                            <div class="flex gap-2">
+                        <button onclick="window.changeOrderPage(-1)" class="p-2 bg-white/50 dark:bg-slate-800/50 rounded-xl border border-white/40 dark:border-slate-700/50 hover:text-brand transition-all cursor-pointer">
+                        <i class="ph ph-caret-left font-bold text-lg"></i>
+                        </button>
+                            <button onclick="window.changeOrderPage(1)" class="p-2 bg-white/50 dark:bg-slate-800/50 rounded-xl border border-white/40 dark:border-slate-700/50 hover:text-brand transition-all cursor-pointer">
+                            <i class="ph ph-caret-right font-bold text-lg"></i>
+                        </button>
+                    </div>
+                </div>
                     </div>
                 </div>
 
@@ -911,6 +937,13 @@
                                         </div>
                                             <p class="text-[10px] text-slate-400 mt-1">Gunakan warna ini untuk aksen tombol sekunder atau variasi UI.</p>
                                     </div>
+                                        <div class="mt-6 pt-6 border-t border-white/20 dark:border-slate-700/50">
+                                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                            <i class="ph ph-qr-code text-brand text-lg"></i> QRIS Image URL (Global)
+                                            </label>
+                                            <input type="url" id="settingQrisUrl" placeholder="https://link-gambar-qris-lo.png" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white text-sm">
+                                            <p class="text-[10px] text-slate-500 mt-1 italic">Masukan link gambar QRIS utama (Gunakan link Direct Image). Ini akan muncul di instruksi pembayaran kustomer.</p>
+                                    </div>
                                 </div>
                             </div>
                                 
@@ -1029,6 +1062,14 @@
                             <input type="file" id="prodImageFile" accept="image/*" class="w-full text-sm text-slate-500 dark:text-slate-400 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-brand/10 file:text-brand hover:file:bg-brand/20 transition-all cursor-pointer">
                         </div>
                     </div>
+
+                    <div class="mt-4">
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                <i class="ph ph-qr-code text-brand text-lg"></i> QRIS Khusus Produk (Optional)
+                            </label>
+                            <input type="url" id="prodQrisUrl" placeholder="https://link-qris-khusus-produk.png" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white text-sm">
+                            <p class="text-[10px] text-slate-500 mt-1 italic">Kosongkan jika ingin menggunakan QRIS Global dari Admin Settings.</p>
+                        </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
@@ -1783,6 +1824,7 @@
         if (document.getElementById('settingColor')) document.getElementById('settingColor').value = set.primaryColor || '#4f46e5';
         if (document.getElementById('settingColorText')) document.getElementById('settingColorText').value = set.primaryColor || '#4f46e5';
         if (document.getElementById('settingLogoUrl')) document.getElementById('settingLogoUrl').value = set.logoUrl || '';
+        if (document.getElementById('settingQrisUrl')) document.getElementById('settingQrisUrl').value = set.qris_image_url || '';
 
         // TAMPILKAN KEMBALI DATA NOTIFIKASI (WA, Email, Telegram)
         if (set.notifications) {
@@ -2254,7 +2296,8 @@
             const salesPageHtml = document.getElementById('prodSalesPageHtml')?.value || ''
             const commissionType = document.getElementById('prodCommType')?.value || 'percent';
             const commissionValue = document.getElementById('prodCommValue')?.value || '';
-            
+            const pq = document.getElementById('prodQrisUrl')?.value || '';
+                        
             let finalImageUrl = document.getElementById('prodImageUrl')?.value || '';
             const prodImageFile = document.getElementById('prodImageFile')?.files?.[0];
             if (prodImageFile) {
@@ -2276,7 +2319,8 @@
                 salesPageUrl: salesPageUrl, 
                 salesPageHtml: salesPageHtml, 
                 commissionType: commissionType, 
-                commissionValue: commissionValue, 
+                commissionValue: commissionValue,
+                qris_image_url: pq,
                 imageUrl: finalImageUrl, 
                 createdAt: Date.now() 
             };
@@ -2351,6 +2395,9 @@
             
             const imgUrlInput = document.getElementById('prodImageUrl');
             if (imgUrlInput) imgUrlInput.value = product.imageUrl || '';
+
+            const qrisUrlInput = document.getElementById('prodQrisUrl');
+            if (qrisUrlInput) qrisUrlInput.value = product.qris_image_url || '';
             
             const imgFileInput = document.getElementById('prodImageFile');
             if (imgFileInput) imgFileInput.value = '';
@@ -3514,6 +3561,79 @@
         }); 
     };
 
+    window.renderOrdersTable = () => { 
+        const tb = document.getElementById('ordersTableBody'); 
+        if(!tb) return; 
+        tb.innerHTML = ''; 
+
+        // AMBIL INPUT FILTER & SEARCH (GAYA SERAGAM)
+        const sIn = document.getElementById('orderSearchInput');
+        const sTerm = sIn ? sIn.value.toLowerCase() : '';
+        const fIn = document.getElementById('orderStatusFilter');
+        const fStat = fIn ? fIn.value : 'ALL';
+
+        // 1. FILTER DATA REAL-TIME
+        const filtered = window.appState.orders.filter(o => {
+            const mSearch = (o.customerName || '').toLowerCase().includes(sTerm) || String(o.id).toLowerCase().includes(sTerm);
+            const mStatus = (fStat === 'ALL') || (o.status === fStat);
+            return mSearch && mStatus;
+        });
+
+        // 2. LOGIKA PAGINATION (10 DATA PER HALAMAN)
+        const limit = 10;
+        const start = (window.appState.orderPage - 1) * limit;
+        const end = start + limit;
+        const paged = filtered.slice(start, end);
+
+        if(paged.length === 0) {
+            tb.innerHTML = '<tr><td colspan="6" class="px-6 py-10 text-center text-slate-500 font-bold text-xs italic">Data tidak ditemukan bray...</td></tr>';
+            return;
+        }
+
+        // 3. RENDER BARIS (GAYA ASLI LO)
+        paged.forEach(o => { 
+            const b = o.status === 'Paid' ? `<span class="text-green-500 font-bold">Paid</span>` : `<span class="text-yellow-500 font-bold">Pending</span>`; 
+            const a = o.status === 'Paid' ? `<button disabled class="text-slate-400">Aktif</button>` : `<button onclick="window.approveOrder('${o.id}')" class="bg-brand text-white px-2 py-1 rounded text-xs font-bold">Approve</button>`; 
+            
+            tb.innerHTML += `<tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+                <td class="px-6 py-4 font-mono text-xs dark:text-white">#${String(o.id).substring(0,6)}</td>
+                <td class="px-6 py-4">
+                    <p class="font-bold dark:text-white">${o.customerName}</p>
+                    <p class="text-xs text-slate-500">${o.paymentMethod}</p>
+                </td>
+                <td class="px-6 py-4 dark:text-white text-xs">${o.productTitle}</td>
+                <td class="px-6 py-4 dark:text-white font-bold text-brand">${window.formatRp(o.totalPay||o.basePrice)}</td>
+                <td class="px-6 py-4">${b}</td>
+                <td class="px-6 py-4 text-right">${a}</td>
+            </tr>`; 
+        }); 
+
+        // Update Text Halaman di UI
+        const pDisplay = document.getElementById('currentOrderPage');
+        if(pDisplay) pDisplay.innerText = window.appState.orderPage;
+    };
+
+    window.changeOrderPage = (dir) => {
+        const sIn = document.getElementById('orderSearchInput');
+        const sTerm = sIn ? sIn.value.toLowerCase() : '';
+        const fIn = document.getElementById('orderStatusFilter');
+        const fStat = fIn ? fIn.value : 'ALL';
+
+        const filteredCount = window.appState.orders.filter(o => {
+            const mSearch = (o.customerName || '').toLowerCase().includes(sTerm) || String(o.id).toLowerCase().includes(sTerm);
+            const mStatus = (fStat === 'ALL') || (o.status === fStat);
+            return mSearch && mStatus;
+        }).length;
+
+        const maxPage = Math.ceil(filteredCount / 10) || 1;
+        const newPage = window.appState.orderPage + dir;
+        
+        if(newPage >= 1 && newPage <= maxPage) {
+            window.appState.orderPage = newPage;
+            window.renderOrdersTable();
+        }
+    };
+
     window.approveOrder = async (id) => { 
         if(confirm("Approve order ini?")){ 
             try{ 
@@ -3543,7 +3663,8 @@
             const c = document.getElementById('settingColor').value;
             const sc = document.getElementById('settingSecondaryColor').value;
             const f = document.getElementById('settingLogoFile').files[0];
-            const lu = document.getElementById('settingLogoUrl').value; 
+            const lu = document.getElementById('settingLogoUrl').value;
+            const qu = document.getElementById('settingQrisUrl').value;
             
             document.documentElement.style.setProperty('--brand-color', c); 
             document.documentElement.style.setProperty('--brand-hover', c);
@@ -3572,7 +3693,8 @@
                 appName: n, 
                 primaryColor: c,
                 secondaryColor: sc,
-                logoUrl: img, 
+                logoUrl: img,
+                qris_image_url: qu,
                 banks: bk,
                 notifications: notifData
             }); 
@@ -3582,7 +3704,7 @@
             await window.loadAllData(); 
         } catch(e) { window.showToast(e.message, "error"); } 
     };
-
+    
     // --- LOGIKA BARU: SYSTEM SETTINGS (KONTROL PANEL) ---
     window.renderSystemSettings = () => {
     try {
