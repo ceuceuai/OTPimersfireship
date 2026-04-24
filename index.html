@@ -1889,6 +1889,29 @@
             const user = users.find(u => u.email.toLowerCase() === emailInput.toLowerCase() && (u.password === hashedPass || u.password === rawPass));
 
             if (user) {
+                // --- SUNTIKAN LOGIC OTP START ---
+                if (user.status === 'PENDING') {
+                    const otpInput = prompt("Akun Anda belum aktif. Masukkan kode OTP yang dikirim ke WA Anda:");
+                    if (!otpInput) {
+                        window.showToast("OTP wajib diisi untuk verifikasi akun.", "error");
+                        return;
+                    }
+
+                    try {
+                        const verifyRes = await apiCall('verifyOtp', { email: user.email, otp: otpInput });
+                        if (!verifyRes.success) {
+                            window.showToast("Kode OTP salah, silakan cek kembali WA Anda.", "error");
+                            return;
+                        }
+                        user.status = 'ACTIVE';
+                        window.showToast("Verifikasi Berhasil! Akun Anda aktif.", "success");
+                    } catch (verifyErr) {
+                        window.showToast("Gagal verifikasi: " + verifyErr.message, "error");
+                        return;
+                    }
+                }
+                // --- SUNTIKAN LOGIC OTP END ---
+
                 window.appState.user = user;
                 localStorage.setItem('iMersUser', JSON.stringify(user)); 
                 
@@ -1935,7 +1958,7 @@
             
             await apiCall('register', payload);
             
-            window.showToast("Registrasi berhasil! Silakan Login.");
+            window.showToast("Registrasi berhasil! Silakan cek WA/Email untuk kode OTP.");
             document.getElementById('registerForm').reset();
             window.switchAuthView('login');
         } catch(err) {
@@ -1946,34 +1969,29 @@
     };
 
     window.handleForgot = async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById('forgotBtn');
-    const email = document.getElementById('forgotEmail').value.trim();
-    
-    if(!email) return window.showToast("Email wajib diisi ya bro!", "error");
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Memproses...';
-
-    try {
-        // Panggil backend action forgotPassword yang baru kita buat
-        const res = await apiCall('forgotPassword', { email: email });
+        e.preventDefault();
+        const btn = document.getElementById('forgotBtn');
+        const email = document.getElementById('forgotEmail').value.trim();
         
-        if(res.success) {
-            window.showToast("Instruksi reset password telah dikirim ke Email/WA Anda.", "success");
-            document.getElementById('forgotForm').reset();
-            
-            // Balikin ke tampilan login biar kustomer bisa langsung coba password defaultnya
-            if(typeof window.switchAuthView === 'function') window.switchAuthView('login');
-        }
+        if(!email) return window.showToast("Email wajib diisi ya bro!", "error");
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Memproses...';
+
+        try {
+            const res = await apiCall('forgotPassword', { email: email });
+            if(res.success) {
+                window.showToast("Instruksi reset password telah dikirim ke Email/WA Anda.", "success");
+                document.getElementById('forgotForm').reset();
+                if(typeof window.switchAuthView === 'function') window.switchAuthView('login');
+            }
         } catch (err) {
-        window.showToast("Error: " + err.message, "error");
+            window.showToast("Error: " + err.message, "error");
         } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<span>Kirim Reset Link</span> <i class="ph ph-paper-plane-tilt"></i>';
+            btn.disabled = false;
+            btn.innerHTML = '<span>Kirim Reset Link</span> <i class="ph ph-paper-plane-tilt"></i>';
         }
     };
-
 
     window.handleChangePassword = async (e) => {
         if(e) e.preventDefault();
@@ -1992,15 +2010,9 @@
         try {
             const oldHash = await window.hashPassword(oldPass);
             const newHash = await window.hashPassword(newPass);
-
-            const payload = {
-                id: window.appState.user.id,
-                oldPasswordHash: oldHash,
-                newPasswordHash: newHash
-            };
+            const payload = { id: window.appState.user.id, oldPasswordHash: oldHash, newPasswordHash: newHash };
 
             await apiCall('changePassword', payload);
-            
             window.showToast("Password berhasil diperbarui!", "success");
             document.getElementById('changePasswordForm').reset();
         } catch (err) {
@@ -2016,7 +2028,7 @@
         localStorage.removeItem('checkoutIntent');
         window.location.reload();
     };
-
+    
 // --- NAVIGATION & UI LOGIC (FIXED) ---
     window.navigate = (targetId) => {
         document.querySelectorAll('.nav-link').forEach(link => {
