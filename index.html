@@ -3921,32 +3921,7 @@ window.switchAuthView = (view) => {
             });
         }); 
 
-        window.runEmailTest = async () => {
-    const target = document.getElementById('testEmailTarget').value;
-    if (!target || !target.includes('@')) {
-        window.showToast("Masukkan email tujuan yang bener dulu bray!", "error");
-        return;
-    }
-    window.showToast("Mencoba kirim email via API...", "info");
-    const btn = event.currentTarget;
-    const originalContent = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Testing...';
-    try {
-        const res = await apiCall('testEmailConnection', target);
-        if (res && res.includes("Berhasil")) {
-            window.showToast(res, "success");
-        } else {
-            window.showToast(res || "Gagal kirim test bray, cek token lo!", "error");
-        }
-    } catch (err) {
-        window.showToast("Koneksi gagal: " + err.message, "error");
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalContent;
-    }
-};
-        
+   
         // --- PERBAIKAN NOTIFIKASI: AMBIL REAL VALUE DARI SELECT ---
         const notifData = {
             // Ambil langsung nilainya, jangan dikasih default string mati di sini bray
@@ -3983,6 +3958,35 @@ window.switchAuthView = (view) => {
         console.error(e);
         window.showToast("Gagal simpan: " + e.message, "error"); 
     } 
+};
+
+    // --- NAH, TARUH DI SINI BRAY (DI LUAR BLOK SAVE) ---
+window.runEmailTest = async () => {
+    const target = document.getElementById('testEmailTarget').value;
+    if (!target || !target.includes('@')) {
+        window.showToast("Masukkan email tujuan yang bener dulu bray!", "error");
+        return;
+    }
+    
+    window.showToast("Mencoba kirim email via API...", "info");
+    const btn = event.currentTarget;
+    const originalContent = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Testing...';
+    
+    try {
+        const res = await apiCall('testEmailConnection', target);
+        if (res && res.includes("Berhasil")) {
+            window.showToast(res, "success");
+        } else {
+            window.showToast(res || "Gagal kirim test bray, cek token lo!", "error");
+        }
+    } catch (err) {
+        window.showToast("Koneksi gagal: " + err.message, "error");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    }
 };
     // --- LOGIKA BARU: SYSTEM SETTINGS (KONTROL PANEL) ---
     window.renderSystemSettings = () => {
