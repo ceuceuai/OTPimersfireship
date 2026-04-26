@@ -987,43 +987,42 @@
 </div>
 
 <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
-    <h4 class="font-black text-slate-800 dark:text-white mb-2 text-lg text-brand">Email Notification System</h4>
-    <p class="text-[10px] text-slate-500 mb-6 italic">Default: <b>Google MailApp</b> (Plug & Play). Gunakan Pihak ke-3 jika ingin limit kirim lebih besar.</p>
+    <h4 class="font-bold text-slate-800 dark:text-white mb-2 text-lg">Email Notification System</h4>
+    <p class="text-[10px] text-slate-500 mb-6 italic">Default: <b>Google MailApp</b>. Gunakan pihak ke-3 jika ingin limit kirim lebih besar.</p>
     
-    <div class="mb-5">
-        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Sender Name / Branding</label>
-        <input type="text" id="notifEmailSender" placeholder="Contoh: Admin iMersFireship" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium uppercase text-xs">
-    </div>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <div class="space-y-5">
         <div>
-            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Provider</label>
-            <select id="notifEmailProvider" onchange="window.toggleEmailApiInput()" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-bold italic">
-                <option value="google">--- STANDAR GOOGLE ---</option>
-                <option value="mailketing">MAILKETING API</option>
-                <option value="jowmail">JOWMAIL API</option>
-            </select>
+            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Sender Name / Branding</label>
+            <input type="text" id="notifEmailSender" placeholder="Contoh: Admin iMersFireship" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
         </div>
         
-        <div class="sm:col-span-2" id="wrapperEmailToken">
-            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">API Token Pihak Ke-3</label>
-            <input type="password" id="notifEmailToken" placeholder="Masukkan API Token..." class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Pilih Provider</label>
+                <select id="notifEmailProvider" onchange="window.toggleEmailApiInput()" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                    <option value="google">Standar Google</option>
+                    <option value="mailketing">Mailketing API</option>
+                    <option value="jowmail">Jowmail API</option>
+                </select>
+            </div>
+            <div id="wrapperEmailToken" class="hidden">
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">API Token Pihak Ke-3</label>
+                <input type="password" id="notifEmailToken" placeholder="Masukkan API Token..." class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white">
+            </div>
         </div>
-    </div>
 
-    <div id="wrapperTestEmail" class="mt-6 p-5 bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
-        <label class="block text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-3">⚡ Quick API Connection Test (Mailketing/Jowmail)</label>
-        <div class="flex flex-col sm:flex-row gap-3">
-            <input type="email" id="testEmailTarget" placeholder="Email untuk terima test..." class="flex-1 px-4 py-3 bg-white/80 dark:bg-slate-900/80 border border-emerald-500/20 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all dark:text-white text-sm font-medium">
-            <button type="button" onclick="window.runEmailTest()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
-                <i class="ph ph-paper-plane-tilt text-lg"></i>
-                Test Kirim
-            </button>
+        <div id="wrapperTestEmail" class="hidden p-5 bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
+            <label class="block text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-3">⚡ Quick API Connection Test</label>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <input type="email" id="testEmailTarget" placeholder="Email tujuan test..." class="flex-1 px-4 py-3 bg-white/80 dark:bg-slate-900/80 border border-emerald-500/20 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all dark:text-white text-sm font-medium">
+                <button type="button" onclick="window.runEmailTest()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold text-xs transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+                    <i class="ph ph-paper-plane-tilt text-lg"></i>
+                    Test Kirim
+                </button>
+            </div>
         </div>
-        <p class="text-[10px] text-slate-500 mt-2 italic">*Pake ini buat mastiin API Mailketing/Jowmail lo beneran jalan sebelum di-save.</p>
     </div>
-</div>
-            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
+</div>            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
                 <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Telegram Bot Notification</h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
