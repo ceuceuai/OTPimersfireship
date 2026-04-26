@@ -3886,36 +3886,44 @@ window.switchAuthView = (view) => {
         const lu = document.getElementById('settingLogoUrl').value;
         const qu = document.getElementById('settingQrisUrl').value;
         
-        // --- SUNTIKAN FITUR v2.1: AMBIL DATA REDIRECT ---
+        // --- DATA REDIRECT v2.1 ---
         const gText = document.getElementById('setup-globalSuccessBtnText')?.value || 'KEMBALI KE DASHBOARD';
         const gUrl = document.getElementById('setup-globalSuccessBtnUrl')?.value || '#';
         const emailSender = document.getElementById('notifEmailSender')?.value || '';
         
+        // Update UI secara instan
         document.documentElement.style.setProperty('--brand-color', c); 
         document.documentElement.style.setProperty('--brand-hover', c);
         document.documentElement.style.setProperty('--secondary-color', sc);
         document.querySelectorAll('.app-name-display').forEach(e => e.innerText = n || 'iMers'); 
         
+        // --- LOGIKA BANK (PASTIKAN TIDAK BLANK) ---
         let bk = []; 
         document.querySelectorAll('.bank-item').forEach(e => {
             const bn = e.querySelector('.b-name').value; 
-            if(bn) bk.push({name: bn, no: e.querySelector('.b-no').value, owner: e.querySelector('.b-owner').value});
+            if(bn) bk.push({
+                name: bn, 
+                no: e.querySelector('.b-no').value, 
+                owner: e.querySelector('.b-owner').value
+            });
         }); 
         
+        // --- PERBAIKAN NOTIFIKASI: AMBIL REAL VALUE DARI SELECT ---
         const notifData = {
-            waProvider: document.getElementById('notifWaProvider')?.value || 'fonnte',
-            waToken: document.getElementById('notifWaToken')?.value || '',
-            adminWa: window.formatPhoneNumber ? window.formatPhoneNumber(document.getElementById('notifAdminWa')?.value || '') : (document.getElementById('notifAdminWa')?.value || ''),
-            emailProvider: document.getElementById('notifEmailProvider')?.value || 'google',
-            emailToken: document.getElementById('notifEmailToken')?.value || '',
-            telegramToken: document.getElementById('notifTelegramToken')?.value || '',
-            telegramChatId: document.getElementById('notifTelegramChatId')?.value || '',
-            emailSender: emailSender // Masukin ke sini biar Code.gs gampang nangkepnya
+            // Ambil langsung nilainya, jangan dikasih default string mati di sini bray
+            waProvider: document.getElementById('notifWaProvider').value,
+            waToken: document.getElementById('notifWaToken').value,
+            adminWa: window.formatPhoneNumber ? window.formatPhoneNumber(document.getElementById('notifAdminWa').value) : document.getElementById('notifAdminWa').value,
+            emailProvider: document.getElementById('notifEmailProvider').value,
+            emailToken: document.getElementById('notifEmailToken').value,
+            telegramToken: document.getElementById('notifTelegramToken').value,
+            telegramChatId: document.getElementById('notifTelegramChatId').value,
+            emailSender: emailSender
         };
 
         let img = f ? await window.compressImage(f, 400) : lu; 
         
-        // --- KIRIM SEMUA DATA KE BACKEND ---
+        // --- KIRIM KE BACKEND ---
         await apiCall('saveSettings', {
             appName: n, 
             primaryColor: c,
@@ -3924,7 +3932,6 @@ window.switchAuthView = (view) => {
             qris_image_url: qu,
             banks: bk,
             notifications: notifData,
-            // Data utama untuk Kolom P & Q (Backend butuh ini di root payload)
             globalSuccessBtnText: gText,
             globalSuccessBtnUrl: gUrl
         }); 
@@ -3937,7 +3944,7 @@ window.switchAuthView = (view) => {
         console.error(e);
         window.showToast("Gagal simpan: " + e.message, "error"); 
     } 
-};    
+};
     // --- LOGIKA BARU: SYSTEM SETTINGS (KONTROL PANEL) ---
     window.renderSystemSettings = () => {
     try {
