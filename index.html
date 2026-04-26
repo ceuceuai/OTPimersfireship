@@ -914,154 +914,151 @@
     </div>
 </div>
                 <div id="content-settings" class="content-section hidden space-y-8 max-w-4xl">
-                    <div class="glass rounded-3xl shadow-xl p-8 border border-white/40 dark:border-slate-700/50">
-                        <h3 class="text-xl font-black text-slate-800 dark:text-white mb-6 border-b border-white/40 dark:border-slate-700/50 pb-4">Admin Settings</h3>
-                        <div class="space-y-8">
-                            <div>
-                                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Branding</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Logo URL / Upload</label>
-                                        <div class="flex items-center gap-3 mb-3">
-                                            <input type="url" id="settingLogoUrl" placeholder="https://example.com/logo.png" class="flex-1 px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white">
-                                        </div>
-                                        <div class="flex items-center gap-3">
-                                            <input type="file" id="settingLogoFile" accept="image/*" class="w-full text-sm text-slate-500 dark:text-slate-400 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-brand/10 file:text-brand hover:file:bg-brand/20 transition-all cursor-pointer">
-                                        </div>
-                                    </div>
-                                    <div class="space-y-4">
-                                        <div>
-                                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Platform Name</label>
-                                            <input type="text" id="settingAppName" value="iMersFireship" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Primary Color (Hex)</label>
-                                            <div class="flex items-center gap-3">
-                                                <input type="color" id="settingColor" value="#4f46e5" class="w-12 h-12 rounded-xl cursor-pointer border-0 p-1 bg-white/50 dark:bg-slate-900/50 shadow-sm">
-                                                <input type="text" id="settingColorText" value="#4f46e5" class="flex-1 px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-mono font-medium" readonly>
-                                            </div>
-                                        </div>
-                                     <div class="mt-4">
-                                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Secondary Color (Hex)</label>
-                                            <div class="flex items-center gap-3">
-                                            <input type="color" id="settingSecondaryColor" value="#ec4899" class="w-12 h-12 rounded-xl cursor-pointer border-0 p-1 bg-white/50 dark:bg-slate-900/50 shadow-sm" oninput="document.getElementById('settingSecondaryColorText').value = this.value">
-                                            <input type="text" id="settingSecondaryColorText" value="#ec4899" class="flex-1 px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl outline-none transition-all dark:text-white font-mono font-medium" readonly>
-                                        </div>
-                                            <p class="text-[10px] text-slate-400 mt-1">Gunakan warna ini untuk aksen tombol sekunder atau variasi UI.</p>
-                                    </div>
-                                        <div class="mt-6 pt-6 border-t border-white/20 dark:border-slate-700/50">
-                                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
-                                            <i class="ph ph-qr-code text-brand text-lg"></i> QRIS Image URL (Global)
-                                            </label>
-                                            <input type="url" id="settingQrisUrl" placeholder="https://link-gambar-qris-lo.png" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white text-sm">
-                                            <p class="text-[10px] text-slate-500 mt-1 italic">Masukan link gambar QRIS utama (Gunakan link Direct Image). Ini akan muncul di instruksi pembayaran kustomer.</p>
-                                    </div>
-                                </div>
-                            </div>
-                                
-                            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
-                                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">WhatsApp API Gateway</h4>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mb-5">Atur API WA untuk otomatis mengirim tagihan dan akses produk ke kustomer.</p>
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
-                                    <div>
-                                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Provider</label>
-                                        <select id="notifWaProvider" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
-                                            <option value="fonnte">Fonnte</option>
-                                            <option value="starsender">StarSender</option>
-                                            <option value="xsender">Xsender</option>
-                                            <option value="custom">Custom API</option>
-                                        </select>
-                                    </div>
-                                    <div class="sm:col-span-2">
-                                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">API Token / Key</label>
-                                        <input type="password" id="notifWaToken" placeholder="Masukkan Token Fonnte / StarSender / Xsender Anda" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Nomor WA Admin <span class="text-slate-400 font-normal">(Untuk Notif Order Baru)</span></label>
-                                    <input type="text" id="notifAdminWa" placeholder="Contoh: 08123456789" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
-                                </div>
-                            </div>
-                            
-                            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
-                                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Email API Gateway</h4>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mb-5">Atur pengiriman email menggunakan layanan pihak ke-3. Kosongkan untuk pakai bawaan Google.</p>
-    
-                                <div class="mb-5">
-                                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Nama Pengirim Email (Sender Name)</label>
-                                        <input type="text" id="notifEmailSender" placeholder="Contoh: CS Toko Online" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
-                                <p class="text-[10px] text-slate-500 mt-1 italic">Nama yang akan muncul sebagai pengirim di email kustomer.</p>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
-                        <div>
-                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Provider Email</label>
-                            <select id="notifEmailProvider" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
-                            <option value="google">Default (Google MailApp)</option>
-                                    <option value="mailketing">Mailketing</option>
-                            <option value="jowmail">Jowmail</option>
-                        </select>
-                            </div>
-                        <div class="sm:col-span-2">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">API Bearer Token</label>
-                                                <input type="password" id="notifEmailToken" placeholder="Masukkan API Token Pihak Ke-3 Anda" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+    <div class="glass rounded-3xl shadow-xl p-8 border border-white/40 dark:border-slate-700/50">
+        <h3 class="text-xl font-black text-slate-800 dark:text-white mb-6 border-b border-white/40 dark:border-slate-700/50 pb-4 flex items-center gap-2">
+            <i class="ph-fill ph-gear-six text-brand"></i> Admin Settings
+        </h3>
+        
+        <div class="space-y-8">
+            <div>
+                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Branding</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Logo URL / Upload</label>
+                        <div class="flex items-center gap-3 mb-3">
+                            <input type="url" id="settingLogoUrl" placeholder="https://example.com/logo.png" class="flex-1 px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white">
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <input type="file" id="settingLogoFile" accept="image/*" class="w-full text-sm text-slate-500 dark:text-slate-400 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-brand/10 file:text-brand hover:file:bg-brand/20 transition-all cursor-pointer">
                         </div>
                     </div>
-                    </div>
-                            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
-                                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Telegram Bot Notification</h4>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mb-5">Atur pengiriman notifikasi order baru via Telegram Bot.</p>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-                                    <div>
-                                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Bot Token</label>
-                                        <input type="password" id="notifTelegramToken" placeholder="Masukkan Bot Token dari BotFather" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Admin Chat ID</label>
-                                        <input type="text" id="notifTelegramChatId" placeholder="Masukkan ID Chat Telegram Admin" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
-                                    </div>
-                                </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Platform Name</label>
+                            <input type="text" id="settingAppName" value="iMersFireship" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Primary Color (Hex)</label>
+                            <div class="flex items-center gap-3">
+                                <input type="color" id="settingColor" value="#4f46e5" class="w-12 h-12 rounded-xl cursor-pointer border-0 p-1 bg-white/50 dark:bg-slate-900/50 shadow-sm" oninput="document.getElementById('settingColorText').value = this.value">
+                                <input type="text" id="settingColorText" value="#4f46e5" class="flex-1 px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl outline-none dark:text-white font-mono font-medium" readonly>
                             </div>
-
-                            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
-                                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Payment Methods</h4>
-                                <div class="mb-5 bg-white/30 dark:bg-slate-800/30 p-5 rounded-2xl border border-white/40 dark:border-slate-700/50">
-                                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Manual Bank Transfer</label>
-                                    <div id="bankList" class="space-y-3 mb-4">
-                                        </div>
-                                    <button onclick="addBankField()" class="text-xs bg-brand/10 hover:bg-brand/20 text-brand font-black px-4 py-2 rounded-lg shadow-sm transition-colors flex items-center gap-1"><i class="ph ph-plus-circle text-lg"></i> Add Bank</button>
-                                </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Secondary Color (Hex)</label>
+                            <div class="flex items-center gap-3">
+                                <input type="color" id="settingSecondaryColor" value="#ec4899" class="w-12 h-12 rounded-xl cursor-pointer border-0 p-1 bg-white/50 dark:bg-slate-900/50 shadow-sm" oninput="document.getElementById('settingSecondaryColorText').value = this.value">
+                                <input type="text" id="settingSecondaryColorText" value="#ec4899" class="flex-1 px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl outline-none dark:text-white font-mono font-medium" readonly>
                             </div>
-
-                            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50 text-left">
-                                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg flex items-center gap-2 uppercase italic tracking-tighter">
-                                    <i class="ph-fill ph-link text-brand"></i> Success Redirect (Global)
-                                </h4>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mb-5">Atur teks tombol dan link tujuan setelah kustomer berhasil melakukan pembayaran secara global.</p>
-                                
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5 text-left">
-                                    <div>
-                                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Teks Tombol Akses</label>
-                                        <input type="text" id="setup-globalSuccessBtnText" placeholder="Contoh: AKSES PRODUK" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-bold text-xs uppercase tracking-tighter">
-                                    </div>
-                                    <div>
-                                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">URL Tujuan Sukses</label>
-                                        <input type="url" id="setup-globalSuccessBtnUrl" placeholder="https://domain.com/thankyou" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium text-xs tracking-tight">
-                                    </div>
-                                </div>
-                            </div>
-                                
-                            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
-                                <button onclick="saveSettings()" class="bg-gradient-to-r from-brand to-purple-600 hover:from-brandHover hover:to-purple-700 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-brand/30 w-full sm:w-auto uppercase tracking-tighter">
-                                    Save Changes
-                                </button>
-                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1 italic">Aksen tombol sekunder atau variasi UI.</p>
                         </div>
                     </div>
                 </div>
+                <div class="mt-6 pt-6 border-t border-white/20 dark:border-slate-700/50">
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                        <i class="ph ph-qr-code text-brand text-lg"></i> QRIS Image URL (Global)
+                    </label>
+                    <input type="url" id="settingQrisUrl" placeholder="https://link-gambar-qris-lo.png" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white text-sm">
+                    <p class="text-[10px] text-slate-500 mt-1 italic">Link Direct Image QRIS utama yang muncul di instruksi pembayaran kustomer.</p>
+                </div>
             </div>
-        </main>
+
+            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
+                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">WhatsApp API Gateway</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Provider</label>
+                        <select id="notifWaProvider" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                            <option value="fonnte">Fonnte</option>
+                            <option value="starsender">StarSender</option>
+                            <option value="xsender">Xsender</option>
+                            <option value="custom">Custom API</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">API Token / Key</label>
+                        <input type="password" id="notifWaToken" placeholder="Token API WA Anda" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Nomor WA Admin</label>
+                    <input type="text" id="notifAdminWa" placeholder="Contoh: 08123456789" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
+                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Email API Gateway</h4>
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Sender Name</label>
+                    <input type="text" id="notifEmailSender" placeholder="Contoh: CS iMersFireship" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Provider</label>
+                        <select id="notifEmailProvider" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                            <option value="google">Default (Google)</option>
+                            <option value="mailketing">Mailketing</option>
+                            <option value="jowmail">Jowmail</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">API Token</label>
+                        <input type="password" id="notifEmailToken" placeholder="API Token Pihak Ke-3" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
+                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Telegram Bot Notification</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Bot Token</label>
+                        <input type="password" id="notifTelegramToken" placeholder="Token dari BotFather" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Admin Chat ID</label>
+                        <input type="text" id="notifTelegramChatId" placeholder="ID Chat Telegram Admin" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
+                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Payment Methods</h4>
+                <div class="bg-white/30 dark:bg-slate-800/30 p-5 rounded-2xl border border-white/40 dark:border-slate-700/50">
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Manual Bank Transfer</label>
+                    <div id="bankList" class="space-y-3 mb-4"></div>
+                    <button onclick="addBankField()" class="text-xs bg-brand/10 hover:bg-brand/20 text-brand font-black px-4 py-2 rounded-lg transition-colors flex items-center gap-1">
+                        <i class="ph ph-plus-circle text-lg"></i> Add Bank
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
+                <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg flex items-center gap-2 uppercase italic tracking-tighter">
+                    <i class="ph-fill ph-link text-brand"></i> Success Redirect (Global)
+                </h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-5 italic font-medium">Kustomisasi tombol dan link yang muncul seketika setelah kustomer menekan tombol bayar.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Teks Tombol Akses</label>
+                        <input type="text" id="setup-globalSuccessBtnText" placeholder="Contoh: AKSES PRODUK SEKARANG" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-black text-xs uppercase tracking-tighter">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">URL Tujuan Sukses (Bebas)</label>
+                        <input type="url" id="setup-globalSuccessBtnUrl" placeholder="https://domain.com/akses-produk" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium text-xs tracking-tight">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
+                <button onclick="saveSettings()" class="bg-gradient-to-r from-brand to-purple-600 hover:from-brandHover hover:to-purple-700 text-white px-10 py-4 rounded-2xl font-black transition-all shadow-lg shadow-brand/30 w-full sm:w-auto uppercase tracking-widest text-sm">
+                    Save Admin Configuration
+                </button>
+            </div>
+        </div>
     </div>
+</div>
     <!-- Product Form Modal (FIXED: DIKEMBALIKAN KARENA SEBELUMNYA HILANG) -->
     <div id="productModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex justify-center items-center p-4">
         <div class="glass rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border border-white/20">
@@ -1875,49 +1872,59 @@
     };
 
     window.applySettingsUI = () => {
-        const set = window.appState.settings;
-        if (!set) return;
+    const set = window.appState.settings;
+    if (!set) return;
 
-        if(set.primaryColor) {
-            document.documentElement.style.setProperty('--brand-color', set.primaryColor);
-            document.documentElement.style.setProperty('--brand-hover', set.primaryColor);
-        }
+    // 1. Branding & Colors
+    if(set.primaryColor) {
+        document.documentElement.style.setProperty('--brand-color', set.primaryColor);
+        document.documentElement.style.setProperty('--brand-hover', set.primaryColor);
+    }
 
-        if(set.secondaryColor) {
-            document.documentElement.style.setProperty('--secondary-color', set.secondaryColor);
+    if(set.secondaryColor) {
+        document.documentElement.style.setProperty('--secondary-color', set.secondaryColor);
+    }
+    
+    if(set.appName) {
+        document.querySelectorAll('.app-name-display').forEach(el => el.innerText = set.appName);
+        document.title = set.appName;
+        if (document.getElementById('site-title')) {
+            document.getElementById('site-title').innerText = set.appName;
         }
+    }
+    window.applyLogo(set.logoUrl);
+    
+    // 2. Map ke Input HTML (ID harus sinkron bray!)
+    if (document.getElementById('settingAppName')) document.getElementById('settingAppName').value = set.appName || 'iMersFireship';
+    if (document.getElementById('settingColor')) document.getElementById('settingColor').value = set.primaryColor || '#4f46e5';
+    if (document.getElementById('settingColorText')) document.getElementById('settingColorText').value = set.primaryColor || '#4f46e5';
+    if (document.getElementById('settingSecondaryColor')) document.getElementById('settingSecondaryColor').value = set.secondaryColor || '#ec4899';
+    if (document.getElementById('settingSecondaryColorText')) document.getElementById('settingSecondaryColorText').value = set.secondaryColor || '#ec4899';
+    if (document.getElementById('settingLogoUrl')) document.getElementById('settingLogoUrl').value = set.logoUrl || '';
+    if (document.getElementById('settingQrisUrl')) document.getElementById('settingQrisUrl').value = set.qris_image_url || '';
+
+    // --- FITUR BARU v2.1: REDIRECT GLOBAL (Kolom P & Q) ---
+    if (document.getElementById('setup-globalSuccessBtnText')) {
+        document.getElementById('setup-globalSuccessBtnText').value = set.globalSuccessBtnText || 'KEMBALI KE DASHBOARD';
+    }
+    if (document.getElementById('setup-globalSuccessBtnUrl')) {
+        document.getElementById('setup-globalSuccessBtnUrl').value = set.globalSuccessBtnUrl || '#';
+    }
+
+    // 3. Notifikasi (WA, Email, Telegram)
+    if (set.notifications) {
+        if (document.getElementById('notifWaProvider')) document.getElementById('notifWaProvider').value = set.notifications.waProvider || 'fonnte';
+        if (document.getElementById('notifWaToken')) document.getElementById('notifWaToken').value = set.notifications.waToken || '';
+        if (document.getElementById('notifAdminWa')) document.getElementById('notifAdminWa').value = set.notifications.adminWa || '';
         
-        if(set.appName) {
-            document.querySelectorAll('.app-name-display').forEach(el => el.innerText = set.appName);
-            // Update judul tab browser otomatis
-            document.title = set.appName;
-            if (document.getElementById('site-title')) {
-                document.getElementById('site-title').innerText = set.appName;
-            }
-        }
-        window.applyLogo(set.logoUrl);
+        if (document.getElementById('notifEmailProvider')) document.getElementById('notifEmailProvider').value = set.notifications.emailProvider || 'google';
+        if (document.getElementById('notifEmailToken')) document.getElementById('notifEmailToken').value = set.notifications.emailToken || '';
+        if (document.getElementById('notifEmailSender')) document.getElementById('notifEmailSender').value = set.notifications.emailSender || '';
         
-        if (document.getElementById('settingAppName')) document.getElementById('settingAppName').value = set.appName || 'iMersFireship';
-        if (document.getElementById('settingColor')) document.getElementById('settingColor').value = set.primaryColor || '#4f46e5';
-        if (document.getElementById('settingColorText')) document.getElementById('settingColorText').value = set.primaryColor || '#4f46e5';
-        if (document.getElementById('settingSecondaryColor')) document.getElementById('settingSecondaryColor').value = set.secondaryColor || '#ec4899';
-        if (document.getElementById('settingSecondaryColorText')) document.getElementById('settingSecondaryColorText').value = set.secondaryColor || '#ec4899';
-        if (document.getElementById('settingLogoUrl')) document.getElementById('settingLogoUrl').value = set.logoUrl || '';
-        if (document.getElementById('settingQrisUrl')) document.getElementById('settingQrisUrl').value = set.qris_image_url || '';
-
-        // TAMPILKAN KEMBALI DATA NOTIFIKASI (WA, Email, Telegram)
-        if (set.notifications) {
-            if (document.getElementById('notifWaProvider')) document.getElementById('notifWaProvider').value = set.notifications.waProvider || 'fonnte';
-            if (document.getElementById('notifWaToken')) document.getElementById('notifWaToken').value = set.notifications.waToken || '';
-            if (document.getElementById('notifAdminWa')) document.getElementById('notifAdminWa').value = set.notifications.adminWa || '';
-            
-            if (document.getElementById('notifEmailProvider')) document.getElementById('notifEmailProvider').value = set.notifications.emailProvider || 'google';
-            if (document.getElementById('notifEmailToken')) document.getElementById('notifEmailToken').value = set.notifications.emailToken || '';
-            
-            if (document.getElementById('notifTelegramToken')) document.getElementById('notifTelegramToken').value = set.notifications.telegramToken || '';
-            if (document.getElementById('notifTelegramChatId')) document.getElementById('notifTelegramChatId').value = set.notifications.telegramChatId || '';
-        }
-
+        if (document.getElementById('notifTelegramToken')) document.getElementById('notifTelegramToken').value = set.notifications.telegramToken || '';
+        if (document.getElementById('notifTelegramChatId')) document.getElementById('notifTelegramChatId').value = set.notifications.telegramChatId || '';
+    }
+}
         // --- TAMBAHAN SUNTIKAN FITUR v2.1 ---
         // Menampilkan Nama Pengirim (Kolom O)
         if (document.getElementById('notifEmailSender')) {
@@ -3873,13 +3880,10 @@
         const lu = document.getElementById('settingLogoUrl').value;
         const qu = document.getElementById('settingQrisUrl').value;
         
-        // --- SUNTIKAN FITUR v2.1 START ---
-        // Ambil nilai dari input baru yang kita buat tadi
-        // Gue kasih ?. biar gak error null pas lo klik save bray
+        // --- SUNTIKAN FITUR v2.1: AMBIL DATA REDIRECT ---
+        const gText = document.getElementById('setup-globalSuccessBtnText')?.value || 'KEMBALI KE DASHBOARD';
+        const gUrl = document.getElementById('setup-globalSuccessBtnUrl')?.value || '#';
         const emailSender = document.getElementById('notifEmailSender')?.value || '';
-        const gText = document.getElementById('setup-globalSuccessBtnText')?.value || 'KE DASHBOARD';
-        const gUrl = document.getElementById('setup-globalSuccessBtnUrl')?.value || '';
-        // --- SUNTIKAN FITUR v2.1 END ---
         
         document.documentElement.style.setProperty('--brand-color', c); 
         document.documentElement.style.setProperty('--brand-hover', c);
@@ -3895,17 +3899,17 @@
         const notifData = {
             waProvider: document.getElementById('notifWaProvider')?.value || 'fonnte',
             waToken: document.getElementById('notifWaToken')?.value || '',
-            adminWa: window.formatPhoneNumber(document.getElementById('notifAdminWa')?.value || ''),
+            adminWa: window.formatPhoneNumber ? window.formatPhoneNumber(document.getElementById('notifAdminWa')?.value || '') : (document.getElementById('notifAdminWa')?.value || ''),
             emailProvider: document.getElementById('notifEmailProvider')?.value || 'google',
             emailToken: document.getElementById('notifEmailToken')?.value || '',
             telegramToken: document.getElementById('notifTelegramToken')?.value || '',
             telegramChatId: document.getElementById('notifTelegramChatId')?.value || '',
-            // Sertakan emailSender di dalam objek notif jika diperlukan di backend
-            emailSender: emailSender
+            emailSender: emailSender // Masukin ke sini biar Code.gs gampang nangkepnya
         };
 
         let img = f ? await window.compressImage(f, 400) : lu; 
         
+        // --- KIRIM SEMUA DATA KE BACKEND ---
         await apiCall('saveSettings', {
             appName: n, 
             primaryColor: c,
@@ -3914,18 +3918,20 @@
             qris_image_url: qu,
             banks: bk,
             notifications: notifData,
-            // --- SUNTIKAN DATA KE BACKEND ---
-            emailSender: emailSender,
+            // Data utama untuk Kolom P & Q (Backend butuh ini di root payload)
             globalSuccessBtnText: gText,
             globalSuccessBtnUrl: gUrl
         }); 
         
         window.applyLogo(img); 
-        window.showToast("Settings saved!"); 
+        window.showToast("Settings v2.1 Berhasil Disimpan!"); 
         await window.loadAllData(); 
-    } catch(e) { window.showToast(e.message, "error"); } 
-};
-    
+        
+    } catch(e) { 
+        console.error(e);
+        window.showToast("Gagal simpan: " + e.message, "error"); 
+    } 
+};    
     // --- LOGIKA BARU: SYSTEM SETTINGS (KONTROL PANEL) ---
     window.renderSystemSettings = () => {
     try {
