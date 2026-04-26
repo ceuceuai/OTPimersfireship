@@ -2393,86 +2393,84 @@ window.switchAuthView = (view) => {
     };
 
     window.saveProduct = async () => {
-        try {
-            const idEl = document.getElementById('prodId');
-            const id = idEl ? idEl.value : ''; 
-            
-            const type = document.getElementById('prodType')?.value || 'download';
-            const title = document.getElementById('prodTitle')?.value || '';
-            const price = Number(document.getElementById('prodPrice')?.value || 0);
-            const desc = document.getElementById('prodDesc')?.value || '';
-            const accessHtml = document.getElementById('prodAccessHtml')?.value || '';
-            const salesPageUrl = document.getElementById('prodSalesPage')?.value || '';
-            const salesPageHtml = document.getElementById('prodSalesPageHtml')?.value || '';
-            const commissionType = document.getElementById('prodCommType')?.value || 'percent';
-            const commissionValue = document.getElementById('prodCommValue')?.value || '';
-            const pq = document.getElementById('prodQrisUrl')?.value || '';
-            
-            // --- SUNTIKAN v2.1: Ambil data Redirect Khusus Produk ---
-            const customRedirect = document.getElementById('prod-customRedirect')?.checked || false;
-            const successBtnText = document.getElementById('prod-successBtnText')?.value || '';
-            const successBtnUrl = document.getElementById('prod-successBtnUrl')?.value || '';
-            // -------------------------------------------------------
-                        
-            let finalImageUrl = document.getElementById('prodImageUrl')?.value || '';
-            const prodImageFile = document.getElementById('prodImageFile')?.files?.[0];
-            if (prodImageFile) {
-                finalImageUrl = await window.compressImage(prodImageFile, 600);
-            }
-            
-            if (!title || document.getElementById('prodPrice').value === '') {
-                window.showToast("Judul dan Harga harus diisi (Ketik angka 0 jika gratis)", "error");
-                return;
-            }
-
-            let data = { 
-                id: id, 
-                type: type, 
-                title: title, 
-                price: price, 
-                description: desc, 
-                accessHtml: accessHtml, 
-                salesPageUrl: salesPageUrl, 
-                salesPageHtml: salesPageHtml, 
-                commissionType: commissionType, 
-                commissionValue: commissionValue,
-                qris_image_url: pq,
-                imageUrl: finalImageUrl, 
-                // --- SUNTIKAN v2.1: Masukkan data baru ke payload ---
-                customRedirect: customRedirect,
-                successBtnText: successBtnText,
-                successBtnUrl: successBtnUrl,
-                // ---------------------------------------------------
-                createdAt: Date.now() 
-            };
-
-            if (type === 'download') {
-                let files = [];
-                document.querySelectorAll('.dl-item').forEach(el => {
-                    const lTitle = el.querySelector('.dl-title')?.value || '';
-                    const lUrl = el.querySelector('.dl-url')?.value || '';
-                    if (lTitle || lUrl) files.push({ title: lTitle, url: lUrl });
-                });
-                data.files = files;
-            } else {
-                let lessons = [];
-                document.querySelectorAll('.lesson-item').forEach(el => {
-                    const lTitle = el.querySelector('.lesson-title')?.value || '';
-                    const lUrl = el.querySelector('.lesson-url')?.value || '';
-                    if (lTitle || lUrl) lessons.push({ title: lTitle, url: lUrl });
-                });
-                data.lessons = lessons;
-            }
-
-            await apiCall('saveProduct', data);
-            window.showToast("Product berhasil disimpan!");
-            await window.loadAllData();
-            window.closeProductModal();
-        } catch (error) {
-            window.showToast("Error menyimpan produk: " + error.message, "error");
+    try {
+        const idEl = document.getElementById('prodId');
+        const id = idEl ? idEl.value : ''; 
+        
+        const type = document.getElementById('prodType')?.value || 'download';
+        const title = document.getElementById('prodTitle')?.value || '';
+        const price = Number(document.getElementById('prodPrice')?.value || 0);
+        const desc = document.getElementById('prodDesc')?.value || '';
+        const accessHtml = document.getElementById('prodAccessHtml')?.value || '';
+        const salesPageUrl = document.getElementById('prodSalesPage')?.value || '';
+        const salesPageHtml = document.getElementById('prodSalesPageHtml')?.value || '';
+        const commissionType = document.getElementById('prodCommType')?.value || 'percent';
+        const commissionValue = document.getElementById('prodCommValue')?.value || '';
+        const pq = document.getElementById('prodQrisUrl')?.value || '';
+        
+        // --- SINKRONISASI v2.1: NEMBAK KE KOLOM P & Q ---
+        // Kita ambil dari input modal, tapi kirim dengan nama variabel 'after_checkout_...'
+        const afterText = document.getElementById('productSuccessBtnText')?.value || '';
+        const afterUrl = document.getElementById('productSuccessBtnUrl')?.value || '';
+        
+        let finalImageUrl = document.getElementById('prodImageUrl')?.value || '';
+        const prodImageFile = document.getElementById('prodImageFile')?.files?.[0];
+        if (prodImageFile) {
+            finalImageUrl = await window.compressImage(prodImageFile, 600);
         }
-    };
+        
+        if (!title || document.getElementById('prodPrice').value === '') {
+            window.showToast("Judul dan Harga harus diisi bray!", "error");
+            return;
+        }
 
+        let data = { 
+            id: id, 
+            type: type, 
+            title: title, 
+            price: price, 
+            description: desc, 
+            accessHtml: accessHtml, 
+            salesPageUrl: salesPageUrl, 
+            salesPageHtml: salesPageHtml, 
+            commissionType: commissionType, 
+            commissionValue: commissionValue,
+            qris_image_url: pq,
+            imageUrl: finalImageUrl, 
+            
+            // --- INI KUNCI SINKRONISASINYA ---
+            after_checkout_text: afterText, // Masuk ke Kolom P
+            after_checkout_url: afterUrl,   // Masuk ke Kolom Q
+            
+            createdAt: Date.now() 
+        };
+
+        if (type === 'download') {
+            let files = [];
+            document.querySelectorAll('.dl-item').forEach(el => {
+                const lTitle = el.querySelector('.dl-title')?.value || '';
+                const lUrl = el.querySelector('.dl-url')?.value || '';
+                if (lTitle || lUrl) files.push({ title: lTitle, url: lUrl });
+            });
+            data.files = files;
+        } else {
+            let lessons = [];
+            document.querySelectorAll('.lesson-item').forEach(el => {
+                const lTitle = el.querySelector('.lesson-title')?.value || '';
+                const lUrl = el.querySelector('.lesson-url')?.value || '';
+                if (lTitle || lUrl) lessons.push({ title: lTitle, url: lUrl });
+            });
+            data.lessons = lessons;
+        }
+
+        await apiCall('saveProduct', data);
+        window.showToast("Product v2.1 Berhasil Disinkronkan!");
+        await window.loadAllData();
+        window.closeProductModal();
+    } catch (error) {
+        window.showToast("Error: " + error.message, "error");
+    }
+};
     window.editProduct = (id) => {
         try {
             const product = window.appState.products.find(p => String(p.id) === String(id));
@@ -3863,10 +3861,22 @@ window.switchAuthView = (view) => {
         }); 
     };
 
-    window.addBankField = () => { 
-        document.getElementById('bankList').innerHTML+=`<div class="flex gap-2 bank-item mb-2"><input type="text" class="b-name border p-2 text-xs w-1/3 bg-transparent dark:text-white" placeholder="Bank"><input type="text" class="b-no border p-2 text-xs w-1/3 bg-transparent dark:text-white" placeholder="No Rek"><input type="text" class="b-owner border p-2 text-xs w-1/3 bg-transparent dark:text-white" placeholder="Atas Nama"><button type="button" onclick="this.parentElement.remove()" class="text-red-500 font-bold">X</button></div>`; 
-    };
-
+    window.addBankField = (data = {}) => { 
+    const container = document.getElementById('bankList');
+    const div = document.createElement('div'); // Rakit bungkusnya dulu
+    div.className = "flex gap-2 bank-item mb-2";
+    
+    // Masukin isinya ke bungkus tadi
+    div.innerHTML = `
+        <input type="text" class="b-name border p-2 text-xs w-1/3 bg-transparent dark:text-white" placeholder="Bank" value="${data.name || ''}">
+        <input type="text" class="b-no border p-2 text-xs w-1/3 bg-transparent dark:text-white" placeholder="No Rek" value="${data.no || ''}">
+        <input type="text" class="b-owner border p-2 text-xs w-1/3 bg-transparent dark:text-white" placeholder="Atas Nama" value="${data.owner || ''}">
+        <button type="button" onclick="this.parentElement.remove()" class="text-red-500 font-bold">X</button>
+    `; 
+    
+    // Tancepin baris barunya tanpa ganggu yang lama
+    container.appendChild(div);
+};
     window.saveSettings = async () => { 
     try { 
         const n = document.getElementById('settingAppName').value;
