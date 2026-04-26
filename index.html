@@ -1871,7 +1871,7 @@
         }
     };
 
-    window.applySettingsUI = () => {
+   window.applySettingsUI = () => {
     const set = window.appState.settings;
     if (!set) return;
 
@@ -1894,7 +1894,7 @@
     }
     window.applyLogo(set.logoUrl);
     
-    // 2. Map ke Input HTML (ID harus sinkron bray!)
+    // 2. Map ke Input HTML
     if (document.getElementById('settingAppName')) document.getElementById('settingAppName').value = set.appName || 'iMersFireship';
     if (document.getElementById('settingColor')) document.getElementById('settingColor').value = set.primaryColor || '#4f46e5';
     if (document.getElementById('settingColorText')) document.getElementById('settingColorText').value = set.primaryColor || '#4f46e5';
@@ -1902,14 +1902,6 @@
     if (document.getElementById('settingSecondaryColorText')) document.getElementById('settingSecondaryColorText').value = set.secondaryColor || '#ec4899';
     if (document.getElementById('settingLogoUrl')) document.getElementById('settingLogoUrl').value = set.logoUrl || '';
     if (document.getElementById('settingQrisUrl')) document.getElementById('settingQrisUrl').value = set.qris_image_url || '';
-
-    // --- FITUR BARU v2.1: REDIRECT GLOBAL (Kolom P & Q) ---
-    if (document.getElementById('setup-globalSuccessBtnText')) {
-        document.getElementById('setup-globalSuccessBtnText').value = set.globalSuccessBtnText || 'KEMBALI KE DASHBOARD';
-    }
-    if (document.getElementById('setup-globalSuccessBtnUrl')) {
-        document.getElementById('setup-globalSuccessBtnUrl').value = set.globalSuccessBtnUrl || '#';
-    }
 
     // 3. Notifikasi (WA, Email, Telegram)
     if (set.notifications) {
@@ -1919,51 +1911,50 @@
         
         if (document.getElementById('notifEmailProvider')) document.getElementById('notifEmailProvider').value = set.notifications.emailProvider || 'google';
         if (document.getElementById('notifEmailToken')) document.getElementById('notifEmailToken').value = set.notifications.emailToken || '';
-        if (document.getElementById('notifEmailSender')) document.getElementById('notifEmailSender').value = set.notifications.emailSender || '';
         
         if (document.getElementById('notifTelegramToken')) document.getElementById('notifTelegramToken').value = set.notifications.telegramToken || '';
         if (document.getElementById('notifTelegramChatId')) document.getElementById('notifTelegramChatId').value = set.notifications.telegramChatId || '';
     }
-}
-        // --- TAMBAHAN SUNTIKAN FITUR v2.1 ---
-        // Menampilkan Nama Pengirim (Kolom O)
-        if (document.getElementById('notifEmailSender')) {
-            document.getElementById('notifEmailSender').value = set.emailSender || '';
-        }
 
-        // Menampilkan Teks Tombol Sukses (Kolom P)
-        if (document.getElementById('setup-globalSuccessBtnText')) {
-            document.getElementById('setup-globalSuccessBtnText').value = set.globalSuccessBtnText || 'AKSES PRODUK';
-        }
+    // --- SUNTIKAN FITUR v2.1 ---
+    // Menampilkan Nama Pengirim (Kolom O)
+    if (document.getElementById('notifEmailSender')) {
+        document.getElementById('notifEmailSender').value = (set.notifications && set.notifications.emailSender) ? set.notifications.emailSender : (set.emailSender || '');
+    }
 
-        // Menampilkan URL Tujuan Sukses (Kolom Q)
-        if (document.getElementById('setup-globalSuccessBtnUrl')) {
-            document.getElementById('setup-globalSuccessBtnUrl').value = set.globalSuccessBtnUrl || '';
-        }
-    };
+    // Menampilkan Teks Tombol Sukses (Kolom P)
+    if (document.getElementById('setup-globalSuccessBtnText')) {
+        document.getElementById('setup-globalSuccessBtnText').value = set.globalSuccessBtnText || 'AKSES PRODUK';
+    }
 
-    // --- AUTH LOGIC ---
-    window.switchAuthView = (view) => {
-        const lf = document.getElementById('loginForm');
-        const rf = document.getElementById('registerForm');
-        const ff = document.getElementById('forgotForm');
-        const subtitle = document.getElementById('authSubtitle');
+    // Menampilkan URL Tujuan Sukses (Kolom Q)
+    if (document.getElementById('setup-globalSuccessBtnUrl')) {
+        document.getElementById('setup-globalSuccessBtnUrl').value = set.globalSuccessBtnUrl || '';
+    }
+}; // <-- PENUTUP FUNGSI YANG BENAR CUMA DISINI
 
-        if (lf) lf.classList.add('hidden');
-        if (rf) rf.classList.add('hidden');
-        if (ff) ff.classList.add('hidden');
+// --- AUTH LOGIC ---
+window.switchAuthView = (view) => {
+    const lf = document.getElementById('loginForm');
+    const rf = document.getElementById('registerForm');
+    const ff = document.getElementById('forgotForm');
+    const subtitle = document.getElementById('authSubtitle');
 
-        if (view === 'login') {
-            if (lf) lf.classList.remove('hidden');
-            if (subtitle) subtitle.innerText = "Admin & User Login";
-        } else if (view === 'register') {
-            if (rf) rf.classList.remove('hidden');
-            if (subtitle) subtitle.innerText = "Daftar Akun Baru";
-        } else if (view === 'forgot') {
-            if (ff) ff.classList.remove('hidden');
-            if (subtitle) subtitle.innerText = "Pemulihan Akun";
-        }
-    };
+    if (lf) lf.classList.add('hidden');
+    if (rf) rf.classList.add('hidden');
+    if (ff) ff.classList.add('hidden');
+
+    if (view === 'login') {
+        if (lf) lf.classList.remove('hidden');
+        if (subtitle) subtitle.innerText = "Admin & User Login";
+    } else if (view === 'register') {
+        if (rf) rf.classList.remove('hidden');
+        if (subtitle) subtitle.innerText = "Daftar Akun Baru";
+    } else if (view === 'forgot') {
+        if (ff) ff.classList.remove('hidden');
+        if (subtitle) subtitle.innerText = "Pemulihan Akun";
+    }
+};
 
     window.gotoLoginFromCheckout = () => {
         const urlParams = new URLSearchParams(window.location.search);
