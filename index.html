@@ -988,10 +988,12 @@
 
 <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
     <h4 class="font-black text-slate-800 dark:text-white mb-4 text-lg">Email API Gateway</h4>
+    
     <div class="mb-5">
         <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Sender Name</label>
         <input type="text" id="notifEmailSender" placeholder="Contoh: CS iMersFireship" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
     </div>
+    
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div>
             <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Provider</label>
@@ -1005,6 +1007,18 @@
             <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">API Token</label>
             <input type="password" id="notifEmailToken" placeholder="API Token Pihak Ke-3" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand outline-none transition-all dark:text-white font-medium">
         </div>
+    </div>
+
+    <div class="mt-6 p-5 bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
+        <label class="block text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-3">⚡ Quick API Connection Test</label>
+        <div class="flex flex-col sm:flex-row gap-3">
+            <input type="email" id="testEmailTarget" placeholder="Email untuk terima test..." class="flex-1 px-4 py-3 bg-white/80 dark:bg-slate-900/80 border border-emerald-500/20 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all dark:text-white text-sm font-medium">
+            <button type="button" onclick="window.runEmailTest()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+                <i class="ph ph-paper-plane-tilt text-lg"></i>
+                Test Kirim
+            </button>
+        </div>
+        <p class="text-[10px] text-slate-500 mt-2 italic">*Pake ini buat mastiin API Mailketing/Jowmail lo beneran jalan sebelum di-save.</p>
     </div>
 </div>
             <div class="pt-6 border-t border-white/40 dark:border-slate-700/50">
@@ -3906,6 +3920,32 @@ window.switchAuthView = (view) => {
                 owner: e.querySelector('.b-owner').value
             });
         }); 
+
+        window.runEmailTest = async () => {
+    const target = document.getElementById('testEmailTarget').value;
+    if (!target || !target.includes('@')) {
+        window.showToast("Masukkan email tujuan yang bener dulu bray!", "error");
+        return;
+    }
+    window.showToast("Mencoba kirim email via API...", "info");
+    const btn = event.currentTarget;
+    const originalContent = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Testing...';
+    try {
+        const res = await apiCall('testEmailConnection', target);
+        if (res && res.includes("Berhasil")) {
+            window.showToast(res, "success");
+        } else {
+            window.showToast(res || "Gagal kirim test bray, cek token lo!", "error");
+        }
+    } catch (err) {
+        window.showToast("Koneksi gagal: " + err.message, "error");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    }
+};
         
         // --- PERBAIKAN NOTIFIKASI: AMBIL REAL VALUE DARI SELECT ---
         const notifData = {
