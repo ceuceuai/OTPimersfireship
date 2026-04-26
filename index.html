@@ -3963,7 +3963,11 @@ window.switchAuthView = (view) => {
     } 
 };
 
-    // --- NAH, TARUH DI SINI BRAY (DI LUAR BLOK SAVE) ---
+    // ==========================================
+// PENGATURAN UI & TEST EMAIL (FIXED v2.1)
+// ==========================================
+
+// --- FUNGSI TEST EMAIL: SELALU STANDBY ---
 window.runEmailTest = async () => {
     const target = document.getElementById('testEmailTarget').value;
     if (!target || !target.includes('@')) {
@@ -3971,43 +3975,50 @@ window.runEmailTest = async () => {
         return;
     }
     
-    window.showToast("Mencoba kirim email via API...", "info");
+    window.showToast("Mencoba kirim email tes...", "info");
+    
+    // Ambil elemen tombol buat efek loading
     const btn = event.currentTarget;
     const originalContent = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Testing...';
     
     try {
+        // Tembak ke Code.gs (apiCall harus sudah terhubung ke google.script.run)
         const res = await apiCall('testEmailConnection', target);
+        
         if (res && res.includes("Berhasil")) {
             window.showToast(res, "success");
         } else {
+            // Jika gagal, tampilkan pesan error detail dari server
             window.showToast(res || "Gagal kirim test bray, cek token lo!", "error");
         }
     } catch (err) {
         window.showToast("Koneksi gagal: " + err.message, "error");
     } finally {
+        // Kembalikan tombol ke kondisi semula
         btn.disabled = false;
         btn.innerHTML = originalContent;
     }
 };
-      
-      window.toggleEmailApiInput = () => {
+
+// --- FUNGSI TOGGLE: HANYA UNTUK SEMBUNYIKAN TOKEN ---
+window.toggleEmailApiInput = () => {
     const provider = document.getElementById('notifEmailProvider').value;
     const wrapperToken = document.getElementById('wrapperEmailToken');
-    const wrapperTest = document.getElementById('wrapperTestEmail');
+    const wrapperTest = document.getElementById('wrapperTestEmail'); // Panel Test
 
+    // Logic: Panel Token hanya muncul jika BUKAN google
     if (provider === 'google' || !provider) {
         wrapperToken.classList.add('hidden');
-        wrapperTest.classList.add('hidden');
     } else {
         wrapperToken.classList.remove('hidden');
-        wrapperTest.classList.remove('hidden');
     }
-};
 
-// PANGGIL INI di baris terakhir fungsi applySettingsUI lo biar pas load lsg nyesuain
-// window.toggleEmailApiInput();
+    // FIXED: Panel Test Email SELALU MUNCUL (Hapus logic hidden)
+    wrapperTest.classList.remove('hidden'); 
+};
+ 
             
     // --- LOGIKA BARU: SYSTEM SETTINGS (KONTROL PANEL) ---
     window.renderSystemSettings = () => {
