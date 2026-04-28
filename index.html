@@ -893,10 +893,10 @@
 </div>
 
 <div id="form-KIRIMEMAIL" class="email-config-form hidden space-y-4">
-    <input type="text" id="KIRIMEMAIL_AUTH_ID" placeholder="Username (Cth: terrykatar12)" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 rounded-xl outline-none dark:text-white font-bold">
+    <input type="text" id="KIRIMEMAIL_AUTH_ID" placeholder="Username (Contoh: terrykatar12)" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 rounded-xl outline-none dark:text-white font-bold">
     <input type="password" id="KIRIMEMAIL_AUTH_TOKEN" placeholder="REST API Token" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 rounded-xl outline-none dark:text-white font-bold">
     <input type="text" id="KIRIMEMAIL_LIST_ID" placeholder="List ID (Cth: 24)" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 rounded-xl outline-none dark:text-white font-bold">
-    <input type="text" id="KIRIMEMAIL_SENDER" placeholder="Email Pengirim (Wajib Verified di Kirim.Email)" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-brand/30 rounded-xl outline-none dark:text-white font-bold">
+    <input type="text" id="KIRIMEMAIL_SENDER" placeholder="Email Pengirim (Wajib Verified)" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-brand/50 rounded-xl outline-none dark:text-white font-bold">
 </div>
 
 <div id="form-SMTP" class="email-config-form hidden space-y-4">
@@ -3674,6 +3674,7 @@
                 'KIRIMEMAIL_AUTH_ID': config.KIRIMEMAIL_AUTH_ID || '',
                 'KIRIMEMAIL_AUTH_TOKEN': config.KIRIMEMAIL_AUTH_TOKEN || '',
                 'KIRIMEMAIL_LIST_ID': config.KIRIMEMAIL_LIST_ID || '',
+                'KIRIMEMAIL_SENDER': config.KIRIMEMAIL_SENDER || '',
                 'SMTP_HOST': config.SMTP_HOST || '',
                 'SMTP_PORT': config.SMTP_PORT || '',
                 'SMTP_USER': config.SMTP_USER || '',
@@ -3726,6 +3727,7 @@
             KIRIMEMAIL_AUTH_ID: document.getElementById('KIRIMEMAIL_AUTH_ID')?.value || '',
             KIRIMEMAIL_AUTH_TOKEN: document.getElementById('KIRIMEMAIL_AUTH_TOKEN')?.value || '',
             KIRIMEMAIL_LIST_ID: document.getElementById('KIRIMEMAIL_LIST_ID')?.value || '',
+            KIRIMEMAIL_SENDER: document.getElementById('KIRIMEMAIL_SENDER')?.value || '',
             SMTP_HOST: document.getElementById('SMTP_HOST')?.value || '',
             SMTP_PORT: document.getElementById('SMTP_PORT')?.value || '',
             SMTP_USER: document.getElementById('SMTP_USER')?.value || '',
