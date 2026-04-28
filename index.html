@@ -894,9 +894,7 @@
 
 <div id="form-KIRIMEMAIL" class="email-config-form hidden space-y-4">
     <input type="text" id="KIRIMEMAIL_AUTH_ID" placeholder="Username (Contoh: terrykatar12)" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 rounded-xl outline-none dark:text-white font-bold">
-    
     <input type="text" id="KIRIMEMAIL_AUTH_TOKEN" placeholder="REST API Token" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 rounded-xl outline-none dark:text-white font-bold">
-    
     <input type="text" id="KIRIMEMAIL_LIST_ID" placeholder="List ID (Cth: 24)" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 rounded-xl outline-none dark:text-white font-bold">
     <input type="text" id="KIRIMEMAIL_SENDER" placeholder="Email Pengirim (Wajib Verified)" class="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-brand/50 rounded-xl outline-none dark:text-white font-bold">
 </div>
@@ -3758,41 +3756,34 @@
     };
 
    // --- FUNGSI TES EMAIL GLOBAL ---
-    window.testEmailConfig = async () => {
+window.testEmailConfig = async () => {
     const provider = document.getElementById('sysEmailProvider').value;
-    if (provider === 'NONE') return window.showToast("Pilih provider dulu, Bos!", "error");
+    
+    if (provider === 'NONE') {
+        return window.showToast("Pilih provider dulu, Bos!", "error");
+    }
 
     const targetEmail = prompt("Kirim email tes ke mana?");
     if (!targetEmail) return;
 
     window.showToast("Sedang mengetes " + provider + "...");
 
-    window.testEmailConfig = async () => {
-    const provider = document.getElementById('sysEmailProvider').value;
-    if (provider === 'NONE') return window.showToast("Pilih provider dulu, Bos!", "error");
-
-    const targetEmail = prompt("Kirim email tes ke mana?");
-    if (!targetEmail) return;
-
-    window.showToast("Sedang mengetes " + provider + "...");
-
-    // PAYLOAD LENGKAP: Mailketing & Jowmail TETEP AMAN
+    // PAYLOAD LENGKAP: Mailketing, Jowmail & Kirim.Email
     const payload = {
         action: 'testThirdParty',
         provider: provider.toLowerCase(),
         test_email: targetEmail,
         
-        // Logika ambil Token: 
-        // Kalau KirimEmail ambil dari _AUTH_TOKEN, kalau lain ambil provider + _TOKEN
+        // Logika ambil Token & ID secara dinamis
         token: (provider === 'KIRIMEMAIL') 
-               ? document.getElementById('KIRIMEMAIL_AUTH_TOKEN')?.value 
-               : document.getElementById(provider + '_TOKEN')?.value || "",
+            ? document.getElementById('KIRIMEMAIL_AUTH_TOKEN')?.value 
+            : document.getElementById(provider + '_TOKEN')?.value || "",
                
         auth_id: document.getElementById('KIRIMEMAIL_AUTH_ID')?.value || "",
         
         list_id: (provider === 'KIRIMEMAIL')
-                 ? document.getElementById('KIRIMEMAIL_LIST_ID')?.value
-                 : document.getElementById(provider + '_LIST_ID')?.value || "",
+            ? document.getElementById('KIRIMEMAIL_LIST_ID')?.value
+            : document.getElementById(provider + '_LIST_ID')?.value || "",
         
         // Data Khusus Mailketing
         from_email: document.getElementById('MAILKETING_FROM_EMAIL')?.value || "",
